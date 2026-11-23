@@ -1,0 +1,1 @@
+{"name":"lunaria-v1","private":true,"version":"1.0.0","type":"module","description":"PWA de personagens e histórias com IA opcional","scripts":{"build":"tsc -p tsconfig.json","check":"tsc -p tsconfig.json --noEmit"},"devDependencies":{"typescript":"^5.9.3"}}

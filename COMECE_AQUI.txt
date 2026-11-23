@@ -1,0 +1,35 @@
+LUNARIA V1 — ENVIO PELO NOTEBOOK (GITHUB + NETLIFY)
+
+IMPORTANTE: NAO envie o ZIP fechado ao repositorio. Extraia primeiro.
+
+1. Extraia Lunaria_GitHub_Netlify_v1.zip no Windows.
+2. Abra a pasta extraida. Na raiz devem aparecer: public, netlify, src,
+   netlify.toml, package.json, tsconfig.json e README.md.
+3. Abra o repositorio PRIVADO do Github que voce ja criou (lunari.app).
+4. Clique em Add file > Upload files.
+5. Arraste o CONTEUDO da pasta extraida (pastas e arquivos) para a pagina
+   de upload. Nao envie a pasta-pai como nivel adicional.
+6. Clique em Commit changes (gravar alteracoes na branch main).
+7. Confirme no Github que public/, netlify/ e netlify.toml estao na RAIZ.
+8. Netlify: Add new project > Import an existing project > Github >
+   escolha o repositorio > branch main > Deploy.
+9. A configuracao do projeto fica no netlify.toml:
+   Publish directory: public
+   Functions directory: netlify/functions
+   Build command: vazio (o app.js ja esta compilado)
+10. Sem API, o app abre com conversas DEMONSTRATIVAS. A IA real exige
+    OPENAI_API_KEY e APP_ACCESS_CODE nas variaveis de ambiente do Netlify,
+    com escopo para Functions, e um novo deploy. Nunca coloque chaves
+    de API no Github nem em JavaScript publico.
+
+ATUALIZACOES: Edite/substitua os arquivos no Github, salvando commits
+na branch main; o Netlify conectado publica as mudancas automaticamente.
+Para editar o src/app.ts, rode npm install e npm run build antes de enviar
+public/app.js atualizado. Se editar apenas HTML ou CSS, nao precisa compilar.
+
+LIMITACOES: O modo +18 oferece romance adulto sugestivo, nao sexo explicito.
+A v1 nao gera videos e nao tem sincronizacao de historico entre dispositivos.
+Fotos sao armazenadas localmente; somente com API configurada a analise
+multimodal e a geracao de retratos podem funcionar.
+
+Mais detalhes em README.md.
