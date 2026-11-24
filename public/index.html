@@ -9,6 +9,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/v2.css" />
   <title>Lunaria — suas histórias, seu universo</title>
 </head>
 <body>
@@ -53,11 +54,11 @@
     <button class="nav-item" data-action="create"><svg><use href="#ic-plus"/></svg><span>Criar personagem</span></button>
     <button class="nav-item" data-action="gallery"><svg><use href="#ic-image"/></svg><span>Galeria</span></button>
     <button class="nav-item" data-action="settings"><svg><use href="#ic-settings"/></svg><span>Configurações</span></button>
-    <div class="rail-bottom"><div class="small-flower">✿</div><p>Seu universo, suas escolhas.<br/><strong>Sem moedas por mensagem.</strong></p><span>Versão 1.0 • acesso privado</span></div>
+    <div class="rail-bottom"><div class="small-flower">✿</div><p>Seu universo, suas escolhas.<br/><strong>Sem moedas por mensagem.</strong></p><span>Versão 2.0 • narrativa viva</span></div>
   </aside>
   <main class="main" id="main">
     <header class="topbar">
-      <div class="topbar-title"><span class="eyebrow">BEM-VINDA AO SEU UNIVERSO</span><h1 id="page-title">Onde histórias começam.</h1></div>
+      <div class="topbar-title"><span class="eyebrow">SEU UNIVERSO, SUA HISTÓRIA</span><h1 id="page-title">Cada escolha conta uma história.</h1></div>
       <div class="topbar-actions"><span class="connection-chip" id="connection-chip"><span class="status-dot"></span> Modo demonstração</span><button class="icon-button" data-action="settings" aria-label="Configurações"><svg><use href="#ic-settings"/></svg></button></div>
     </header>
     <div class="layout" id="layout">
@@ -73,10 +74,10 @@
         <div class="chat-empty" id="chat-empty"><span class="empty-mark">✿</span><h2>Cada conversa é um novo começo.</h2><p>Escolha um personagem para começar a escrever a sua história.</p></div>
         <div class="chat-active hidden" id="chat-active">
           <header class="chat-header"><button class="icon-button mobile-back" data-action="back" aria-label="Voltar"><svg><use href="#ic-back"/></svg></button><img id="chat-avatar" class="avatar" src="/assets/yone.webp" alt=""/><div class="chat-person"><strong id="chat-name"></strong><span id="chat-subtitle"></span></div><button class="icon-button" data-action="profile" title="Perfil do personagem" aria-label="Abrir perfil"><svg><use href="#ic-user"/></svg></button><button class="icon-button" data-action="chatmenu" title="Opções de conversa" aria-label="Mais opções"><svg><use href="#ic-dots"/></svg></button></header>
-          <div id="mode-strip" class="mode-strip"><span id="mode-description">✦ Romance espontâneo</span><button id="toggle-story" data-action="story" type="button">Modo história</button><button id="toggle-intimate" data-action="intimate" type="button">Modo íntimo +18</button></div>
+          <div id="mode-strip" class="mode-strip"><span id="mode-description">✦ História viva · Romance</span><button id="toggle-story" data-action="story" type="button">Aventura / RPG</button><button id="toggle-intimate" data-action="intimate" type="button">Modo íntimo +18</button></div>
           <div class="chat-scroll" id="chat-scroll"><div class="message-list" id="message-list" aria-live="polite"></div></div>
           <div class="attachment-preview hidden" id="attachment-preview"></div>
-          <div class="composer-area"><div class="quick-replies" id="quick-replies"><button type="button" data-prompt="Como foi o seu dia?">Como foi seu dia?</button><button type="button" data-prompt="Me conta um segredo seu...">Um segredo seu…</button><button type="button" data-prompt="Vamos criar uma história juntos?">Criar uma história</button></div><form class="composer" id="composer"><label class="attach-button" for="media-input" aria-label="Enviar foto ou vídeo" title="Enviar foto ou vídeo"><svg><use href="#ic-plus"/></svg></label><input id="media-input" class="visually-hidden" type="file" accept="image/*,video/mp4,video/webm,video/quicktime"/><textarea id="message-input" rows="1" placeholder="Escreva sua mensagem..." maxlength="2000" aria-label="Sua mensagem"></textarea><button type="button" class="icon-button" data-action="dictate" title="Ditado por voz" aria-label="Ditar mensagem"><svg><use href="#ic-mic"/></svg></button><button type="button" class="icon-button" data-action="speech" title="Ouvir última resposta" aria-label="Ouvir resposta"><svg><use href="#ic-volume"/></svg></button><button class="send-button" type="submit" id="send-button" aria-label="Enviar mensagem"><svg><use href="#ic-send"/></svg></button></form><div class="chat-footnote" id="chat-footnote">Modo demonstração: diálogos locais de exemplo. Conecte uma API para conversar com IA real.</div></div>
+          <div class="composer-area"><div class="quick-replies" id="quick-replies"><button type="button" data-prompt="Como foi o seu dia?">Como foi seu dia?</button><button type="button" data-prompt="Me conta um segredo seu...">Um segredo seu…</button><button type="button" data-prompt="Vamos criar uma história juntos?">Criar uma história</button></div><form class="composer" id="composer"><label class="attach-button" for="media-input" aria-label="Enviar foto ou vídeo" title="Enviar foto ou vídeo"><svg><use href="#ic-plus"/></svg></label><input id="media-input" class="visually-hidden" type="file" accept="image/*,video/mp4,video/webm,video/quicktime"/><textarea id="message-input" rows="1" placeholder="O que você faz ou diz nesta cena?" maxlength="2000" aria-label="Sua mensagem"></textarea><button class="send-button" type="submit" id="send-button" aria-label="Enviar mensagem"><svg><use href="#ic-send"/></svg></button></form><div class="chat-footnote" id="chat-footnote">Modo demonstração: diálogos locais de exemplo. Conecte uma API para conversar com IA real.</div></div>
         </div>
       </section>
       <aside class="profile-panel hidden" id="profile-panel" aria-label="Perfil do personagem"><button class="icon-button close-profile" data-action="profileclose" aria-label="Fechar perfil"><svg><use href="#ic-close"/></svg></button><div id="profile-content"></div></aside>
@@ -84,8 +85,10 @@
   </main>
 </div>
 <nav class="bottom-nav" aria-label="Menu móvel"><button data-action="home" class="selected"><svg><use href="#ic-heart"/></svg><span>Descobrir</span></button><button data-action="chats"><svg><use href="#ic-chat"/></svg><span>Chats</span></button><button data-action="create"><svg><use href="#ic-plus"/></svg><span>Criar</span></button><button data-action="gallery"><svg><use href="#ic-image"/></svg><span>Galeria</span></button><button data-action="settings"><svg><use href="#ic-settings"/></svg><span>Ajustes</span></button></nav>
+<div id="lunaria-v2-tools" aria-label="Ferramentas da versão 2.0"></div>
 <div class="modal-layer hidden" id="modal-layer" role="presentation"><div class="modal-backdrop" data-action="close"></div><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title"><header class="dialog-head"><h2 id="modal-title"></h2><button type="button" class="icon-button" data-action="close" aria-label="Fechar"><svg><use href="#ic-close"/></svg></button></header><div id="modal-body"></div></section></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="/app.js" defer></script>
+<script src="/v2.js" defer></script>
 </body>
 </html>

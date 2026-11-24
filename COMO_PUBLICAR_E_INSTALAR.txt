@@ -1,0 +1,5 @@
+Leia COMECE_AQUI.txt antes de começar. NÃO envie o ZIP fechado ao GitHub.
+Extraia e copie pastas public, src, netlify e arquivos de configuração
+para o repositório existente no GitHub Desktop. Commit > Push.
+Depois, no Chrome Android, abra o site e use Instalar aplicativo.
+O endereço do painel é /studio.html; configure ADMIN_ACCESS_CODE no Netlify.

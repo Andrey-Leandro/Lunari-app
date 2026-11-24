@@ -14,16 +14,29 @@ const baseChars = [
     { id: 'zoro', name: 'Roronoa Zoro', origin: 'One Piece', category: 'animes', age: 22, image: assets('zoro'), personality: 'Determinado, orgulhoso, leal, engraçado sem perceber, sempre se perde pelo caminho.', story: 'Espadachim adulto, entre aventuras e novas amizades.', tags: ['Leal', 'Corajoso', 'Distraído'], intro: 'Tsc... Acho que me perdi de novo. Já que você está aqui, sabe como chegar ao porto?' },
     { id: 'sylus', name: 'Sylus', origin: 'Love and Deepspace', category: 'jogos', age: 28, image: assets('sylus'), personality: 'Elegante, seguro de si, irônico, carismático e atento aos detalhes.', story: 'Personagem adulto em uma cidade futurista e cheia de mistérios.', tags: ['Elegante', 'Misterioso', 'Sedutor'], intro: 'Finalmente nos encontramos. Tenho a impressão de que esta noite vai ser mais interessante do que eu planejava.' }
 ];
+/* Primeiro capítulo por personagem: entrada em media res, não uma saudação. Não sobrescreve históricos existentes. */
+const chapterOpenings = {
+    sasuke: { narration: 'A lua ainda não havia surgido quando a patrulha de Konoha desapareceu entre as árvores. Na fronteira da Terra do Fogo, Sasuke — já adulto, recém-tornado renegado nesta linha do tempo alternativa — observava os rastros deixados pela perseguição. Um estalo denunciou a presença de outra pessoa atrás das folhagens. Ele levou a mão à espada, mas esperou para ver quem sairia da sombra.', dialogue: 'Pare aí. Você não parece ser da patrulha... Então o que está fazendo tão longe da aldeia?', setting: 'Fronteira de Konoha, noite; Sasuke adulto acaba de romper com a vila e é perseguido.' },
+    yone: { narration: 'A chuva fina escurecia as tábuas de uma ponte antiga. Entre lanternas apagadas, Yone recolhia a máscara de um espírito derrotado, quando ouviu passos vacilantes se aproximando. O vento trouxe o cheiro de incenso e uma presença que não pertencia àquele lugar.', dialogue: 'Não se aproxime da névoa. Há coisas aqui que não vão distinguir você de mim.', setting: 'Ponte da montanha, entardecer chuvoso; uma ameaça espiritual ainda ronda a região.' },
+    gojo: { narration: 'O corredor da escola estava vazio depois de uma missão difícil. A iluminação piscou quando uma barreira desconhecida envolveu o prédio. Gojo parou diante de uma porta selada e percebeu que havia alguém do outro lado.', dialogue: 'Bem... Isso não estava no meu cronograma. Quer me ajudar a descobrir quem resolveu trancar a gente aqui?', setting: 'Escola de Jujutsu, fim de tarde; barreira misteriosa isolou o corredor.' },
+    castiel: { narration: 'O ensaio terminara com uma nota desafinada e uma discussão sobre o próximo show. Do lado de fora do estúdio, Castiel encostou a guitarra na parede e encontrou alguém parado sob a luz fraca da marquise, enquanto a chuva engrossava.', dialogue: 'Você veio pelo show ou só está procurando um lugar para se esconder da chuva?', setting: 'Estúdio de música, noite chuvosa; Castiel adulto acaba de sair de um ensaio tenso.' },
+    nathaniel: { narration: 'A cafeteria fechava quando Nathaniel percebeu que uma pasta com documentos importantes havia desaparecido. No balcão, havia apenas um bilhete sem assinatura e uma pessoa que parecia ter visto quem saíra pela porta dos fundos.', dialogue: 'Com licença... Você viu alguém levar uma pasta azul? É realmente importante.', setting: 'Cafeteria do centro, noite; sumiço de documentos.' },
+    lysandre: { narration: 'As cortinas do pequeno teatro se agitavam com a brisa do lado de fora. Lysandre encontrou uma partitura sem nome esquecida sobre o piano, mas alguém já assobiava a melodia no corredor, como se a conhecesse há anos.', dialogue: 'Curioso... essa música não foi publicada. Como você conhece a melodia?', setting: 'Teatro antigo, começo da noite; partitura misteriosa.' },
+    kayn: { narration: 'Uma lâmina cortou a escuridão do templo abandonado, mas atingiu apenas pedra. Kayn se virou ao ouvir um segundo conjunto de passos. Rhaast sussurrou algo que o fez sorrir com impaciência.', dialogue: 'Se veio me atrapalhar, escolheu a pior hora. Mas talvez possa ser útil.', setting: 'Templo arruinado; Kayn enfrenta ameaça que se esconde nas sombras.' },
+    levi: { narration: 'O quartel estava silencioso depois da expedição. No corredor, Levi examinava um relatório com nomes riscados quando a porta da enfermaria se abriu e alguém trouxe uma notícia inesperada.', dialogue: 'Feche a porta. Diga logo o que aconteceu lá fora.', setting: 'Quartel após missão; Levi busca entender um incidente na enfermaria.' },
+    zoro: { narration: 'O navio ancorara numa ilha onde nenhuma bússola parecia funcionar. Zoro estava, mais uma vez, no caminho errado: diante de um portão antigo vigiado por alguém que claramente não esperava companhia.', dialogue: 'Tsc. Esse não é o porto... Ei, sabe pra onde fica a saída?', setting: 'Ilha desconhecida; Zoro se perdeu a caminho do porto.' },
+    sylus: { narration: 'O elevador do arranha-céu parou entre dois andares e as luzes de emergência tingiram o espelho de vermelho. Sylus recebeu uma mensagem sobre o desaparecimento de um objeto valioso; então reparou que não estava sozinho na cabine.', dialogue: 'Que coincidência inconveniente. Você também estava procurando alguma coisa?', setting: 'Cidade futurista, elevador parado; mistério sobre um objeto desaparecido.' }
+};
 const STORAGE = 'lunaria_state_v1';
 const ACCESS = 'lunaria_access_session';
 const accessCode = () => sessionStorage.getItem(ACCESS) || '';
-const initial = () => ({ characters: baseChars, favorites: [], messages: {}, affinity: {}, modes: {}, selected: '', theme: 'light', adult: false, name: '', gallery: [] });
+const initial = () => ({ characters: baseChars, favorites: [], messages: {}, affinity: {}, modes: {}, selected: '', theme: 'light', adult: false, name: '', gallery: [], emotions: {}, storyContinuity: {} });
 function load() { try {
     const raw = JSON.parse(localStorage.getItem(STORAGE) || 'null');
     if (!raw || typeof raw !== 'object')
         return initial();
     const fresh = initial();
-    return { ...fresh, ...raw, characters: [...baseChars, ...(Array.isArray(raw.characters) ? raw.characters.filter((c) => c.custom && c.age >= 18) : [])], favorites: Array.isArray(raw.favorites) ? raw.favorites : [], messages: raw.messages && typeof raw.messages === 'object' ? raw.messages : {}, gallery: Array.isArray(raw.gallery) ? raw.gallery : [] };
+    return { ...fresh, ...raw, characters: [...baseChars, ...(Array.isArray(raw.characters) ? raw.characters.filter((c) => c.custom && c.age >= 18) : [])], favorites: Array.isArray(raw.favorites) ? raw.favorites : [], messages: raw.messages && typeof raw.messages === 'object' ? raw.messages : {}, gallery: Array.isArray(raw.gallery) ? raw.gallery : [], storyContinuity: raw.storyContinuity && typeof raw.storyContinuity === 'object' ? raw.storyContinuity : {}, emotions: raw.emotions && typeof raw.emotions === 'object' ? raw.emotions : {} };
 }
 catch {
     return initial();
@@ -109,7 +122,19 @@ function renderChat() { const c = getChar(); if (!c)
     renderProfile(); }
 function renderMessages() { const c = getChar(); if (!c)
     return; const list = $('#message-list'); list.replaceChildren(); const day = document.createElement('div'); day.className = 'day-separator'; day.textContent = 'Um novo capítulo'; list.append(day); let messages = getMessages(); if (!messages.length) {
-    messages.push({ id: newId(), role: 'assistant', text: c.intro, time: Date.now(), speaker: c.name });
+    const opening = chapterOpenings[c.id];
+    if (opening) {
+        const parts = [{ kind: 'narration', text: opening.narration }, { kind: 'dialogue', text: opening.dialogue, speaker: c.name }];
+        messages.push({ id: newId(), role: 'assistant', text: parts.map(p => p.kind === 'dialogue' ? `${c.name}: ${p.text}` : p.text).join('\n\n'), parts, time: Date.now(), speaker: c.name });
+        state.storyContinuity ?? (state.storyContinuity = {});
+        state.storyContinuity[c.id] = { scene: opening.setting, time: 'Início da história', relationship: 'Primeiro encontro; ainda não existe relação amorosa.', facts: [opening.setting], threads: ['Descobrir o que acontece em seguida'] };
+    }
+    else {
+        const novel = [{ kind: 'narration', text: c.story || 'O início de uma nova história se revela, quando duas trajetórias se cruzam.' }, { kind: 'dialogue', text: c.intro || 'Quem é você?', speaker: c.name }];
+        messages.push({ id: newId(), role: 'assistant', text: novel.map(x => x.text).join('\n\n'), parts: novel, time: Date.now(), speaker: c.name });
+        state.storyContinuity ?? (state.storyContinuity = {});
+        state.storyContinuity[c.id] = { scene: c.story || 'Novo encontro', time: 'Primeiro capítulo', relationship: 'Ainda não se conhecem.', facts: [], threads: ['Descobrir a história'] };
+    }
     persist();
 } for (const m of messages) {
     const row = document.createElement('article');
@@ -131,8 +156,18 @@ function renderMessages() { const c = getChar(); if (!c)
         }
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
-        if (m.text)
+        if (m.role === 'assistant' && m.parts?.length) {
+            bubble.classList.add('novel-message');
+            for (const part of m.parts) {
+                const el = document.createElement(part.kind === 'narration' ? 'p' : 'div');
+                el.className = part.kind === 'narration' ? 'novel-narration' : 'novel-dialogue';
+                el.textContent = part.text;
+                bubble.append(el);
+            }
+        }
+        else if (m.text) {
             bubble.textContent = m.text;
+        }
         wrap.append(bubble);
         if (m.imageId) {
             const im = document.createElement('img');
@@ -269,11 +304,22 @@ async function sendMessage(ev) {
         let reply;
         if (aiReady) {
             const history = getMessages().slice(-16).map(m => ({ role: m.role, text: m.text, speaker: m.speaker, frames: m.id === userMessage.id ? attachment?.frames : undefined }));
-            const res = await fetch('/.netlify/functions/chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-access-code': accessCode() }, body: JSON.stringify({ character: { name: c.name, age: c.age, personality: c.personality, story: c.story, intro: c.intro }, mode: state.modes[c.id] || 'romance', history, userName: state.name || 'Visitante', group: c.id.startsWith('group::') }) });
+            const res = await fetch('/.netlify/functions/chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-access-code': accessCode() }, body: JSON.stringify({ character: { name: c.name, age: c.age, personality: c.personality, story: c.story, intro: c.intro, opening: chapterOpenings[c.id]?.narration || c.intro }, mode: state.modes[c.id] || 'romance', history, continuity: state.storyContinuity?.[c.id], userName: window.LunariaV2?.getProfile?.()?.name || state.name || 'Visitante', userProfile: window.LunariaV2?.getProfile?.() || null, group: c.id.startsWith('group::') }) });
             const data = await res.json().catch(() => ({}));
             if (!res.ok)
                 throw new Error(data?.error || 'A conexão com a IA falhou.');
-            reply = { text: String(data.reply || '').trim(), speaker: data.speaker || c.name };
+            reply = { text: String(data.reply || '').trim(), speaker: data.speaker || c.name, parts: Array.isArray(data.parts) ? data.parts.slice(0, 7) : undefined };
+            if (data.continuity && typeof data.continuity === 'object') {
+                state.storyContinuity ?? (state.storyContinuity = {});
+                state.storyContinuity[c.id] = data.continuity;
+            }
+            if (data.emotions && typeof data.emotions === 'object') {
+                state.emotions ?? (state.emotions = {});
+                const prior = state.emotions[c.id] || { affection: 5, interest: 12, obsession: 2 };
+                const bounded = (v) => Math.max(0, Math.min(100, v));
+                state.emotions[c.id] = { affection: bounded(prior.affection + (Number(data.emotions.affection) || 0)), interest: bounded(prior.interest + (Number(data.emotions.interest) || 0)), obsession: bounded(prior.obsession + (Number(data.emotions.obsession) || 0)) };
+                state.affinity[c.id] = state.emotions[c.id].affection;
+            }
             if (!reply.text)
                 throw new Error('A IA retornou uma resposta vazia.');
         }
@@ -281,8 +327,9 @@ async function sendMessage(ev) {
             await new Promise(resolve => setTimeout(resolve, 620));
             reply = demoReply(c, text, Boolean(asset), state.modes[c.id] || 'romance');
         }
-        getMessages().push({ id: newId(), role: 'assistant', text: reply.text.slice(0, 3500), time: Date.now(), speaker: reply.speaker });
+        getMessages().push({ id: newId(), role: 'assistant', text: reply.text.slice(0, 5000), parts: reply.parts, time: Date.now(), speaker: reply.speaker });
         persist();
+        window.LunariaV2?.afterReply?.({ text, character: c, aiReady });
     }
     catch (err) {
         getMessages().push({ id: newId(), role: 'system', text: `Não foi possível responder: ${err instanceof Error ? err.message : 'erro desconhecido'}. Sua mensagem foi preservada.`, time: Date.now() });
@@ -434,7 +481,7 @@ else
     state.favorites.push(id); persist(); renderList(); if (profileOpen)
     renderProfile(); }
 function confirmDelete(whole = false) { newModal(whole ? 'Apagar todos os dados?' : 'Limpar esta conversa?', `<div class="notice-box"><strong>Essa ação não pode ser desfeita.</strong><br/>${whole ? 'Todas as conversas, favoritos, personagens personalizados e imagens deste navegador serão apagados.' : 'As mensagens desta conversa serão removidas deste navegador. Seus personagens e favoritos permanecem.'}</div><div class="dialog-actions"><button class="button button-secondary" data-action="close">Cancelar</button><button class="button button-primary" data-action="confirm-delete" data-whole="${whole}">Sim, apagar</button></div>`, 'delete'); }
-function exportData() { const safe = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), data: state }, null, 2); const blob = new Blob([safe], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lunaria-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); toast('Backup de conversas exportado. Mídias não acompanham este JSON.'); }
+function exportData() { const safe = JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), data: state, avatar: JSON.parse(localStorage.getItem('lunaria_v2_identity') || 'null') }, null, 2); const blob = new Blob([safe], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lunaria-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); toast('Backup de conversas exportado. Mídias não acompanham este JSON.'); }
 async function importData(file) { if (!file)
     return; try {
     if (file.size > 3 * 1024 * 1024)
@@ -443,6 +490,10 @@ async function importData(file) { if (!file)
     const parsed = data?.data;
     if (!parsed || !Array.isArray(parsed.characters) || typeof parsed.messages !== 'object')
         throw Error('Backup inválido.');
+    if (data.avatar && typeof data.avatar === 'object') {
+        localStorage.setItem('lunaria_v2_identity', JSON.stringify(data.avatar));
+        window.LunariaV2?.reloadProfile?.();
+    }
     const adults = parsed.characters.filter((c) => c.custom && c.age >= 18 && typeof c.name === 'string');
     state = { ...initial(), ...parsed, characters: [...baseChars, ...adults], selected: '', favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [], gallery: Array.isArray(parsed.gallery) ? parsed.gallery : [] };
     persist();
@@ -454,18 +505,6 @@ async function importData(file) { if (!file)
 catch (err) {
     toast(err instanceof Error ? err.message : 'Não foi possível importar.');
 } }
-function dictateMessage() { const w = window; const SpeechRecognition = w.SpeechRecognition || w.webkitSpeechRecognition; if (!SpeechRecognition) {
-    toast('Ditado não disponível neste navegador.');
-    return;
-} const rec = new SpeechRecognition(); rec.lang = 'pt-BR'; rec.interimResults = false; rec.maxAlternatives = 1; rec.onresult = (event) => { const result = event.results?.[0]?.[0]?.transcript || ''; const field = $('#message-input'); field.value = (field.value ? field.value + ' ' : '') + result; field.focus(); }; rec.onerror = () => toast('Não foi possível captar a voz. Verifique o microfone.'); rec.start(); toast('Ouvindo... fale sua mensagem.'); }
-function speakLast() { const c = getChar(); if (!c)
-    return; const last = getMessages().filter(m => m.role === 'assistant').slice(-1)[0]; if (!last) {
-    toast('Nenhuma resposta para ouvir.');
-    return;
-} if (!('speechSynthesis' in window)) {
-    toast('Leitura de voz indisponível neste navegador.');
-    return;
-} window.speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance(last.text); utter.lang = 'pt-BR'; utter.rate = .94; utter.pitch = c.id === 'castiel' ? .8 : 1; window.speechSynthesis.speak(utter); toast('Reproduzindo em voz do dispositivo (não clonada).'); }
 function showChatMenu() { newModal('Opções da conversa', `<div class="row-buttons"><button class="button button-secondary" data-action="profile">${icon('user')} Abrir perfil</button><button class="button button-secondary" data-action="chat-export">${icon('download')} Exportar diálogo</button><button class="button button-secondary" data-action="clear-chat">${icon('trash')} Limpar conversa</button></div><div class="notice-box">As conversas ficam salvas neste navegador. Se você limpar os dados do dispositivo, perderá mensagens sem backup.</div>`, 'chatmenu'); }
 function exportChat() { const c = getChar(); if (!c)
     return; const text = getMessages().map(m => `[${new Date(m.time).toLocaleString('pt-BR')}] ${m.role === 'user' ? 'Você' : m.role === 'system' ? 'Sistema' : m.speaker || c.name}: ${m.text}`).join('\n\n'); const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `lunaria-${c.id}.txt`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); }
@@ -559,12 +598,6 @@ else if (action === 'adult-toggle') {
     else
         modalAdult();
 }
-else if (action === 'speech') {
-    speakLast();
-}
-else if (action === 'dictate') {
-    dictateMessage();
-}
 else if (action === 'generate') {
     modalGenerate();
 }
@@ -629,8 +662,11 @@ else if (action === 'confirm-delete') {
         dbClear();
         renderTheme();
     }
-    else
+    else {
         delete state.messages[state.selected];
+        if (state.storyContinuity)
+            delete state.storyContinuity[state.selected];
+    }
     closeModal();
     renderScreen();
     toast('Dados apagados.');
@@ -688,4 +724,30 @@ else if (t.closest('#generate-confirm'))
 function init() { renderTheme(); listen(); state.selected = ''; renderScreen(); detectAI(); if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => { }));
 } }
+window.LunariaCore = {
+    getState: () => state,
+    getCharacters: () => state.characters,
+    getCurrentCharacter: () => getChar(),
+    getConnected: () => aiReady,
+    accessCode: () => accessCode(),
+    persist: () => persist(),
+    render: () => { renderScreen(); },
+    renderChat: () => { if (state.selected)
+        renderChat(); },
+    notify: (s) => toast(s),
+    insertImage: async (blob, characterId, caption) => { var _a; const id = newId(); await dbSet(id, blob); const c = state.characters.find(x => x.id === characterId); state.gallery.push({ id, characterId, characterName: c?.name || 'Personagem', caption, created: Date.now() }); (_a = state.messages)[characterId] ?? (_a[characterId] = []); state.messages[characterId].push({ id: newId(), role: 'assistant', text: 'Uma imagem deste momento da história. ♡', imageId: id, time: Date.now(), speaker: c?.name || 'Personagem' }); persist(); if (state.selected === characterId)
+        renderChat(); },
+    applyConfig: (config) => { if (!config || !Array.isArray(config.characters))
+        return; const personals = state.characters.filter(x => x.custom); const overrides = new Map(config.characters.filter((x) => x && typeof x.id === 'string').map((x) => [x.id, x])); const standard = baseChars.map(c => { const override = overrides.get(c.id) || {}; return { ...c, name: typeof override.name === 'string' ? override.name : c.name, image: typeof override.image === 'string' && override.image ? override.image : c.image, personality: typeof override.personality === 'string' && override.personality ? override.personality : c.personality, story: typeof override.story === 'string' && override.story ? override.story : c.story, intro: typeof override.intro === 'string' && override.intro ? override.intro : c.intro, age: typeof override.age === 'number' && override.age >= 18 ? override.age : c.age }; }); const extras = config.characters.filter(x => x && x.id && !baseChars.some(c => c.id === x.id) && Number(x.age) >= 18).map(x => ({ id: String(x.id), name: String(x.name || 'Personagem'), origin: String(x.origin || 'Original'), category: 'originais', age: Number(x.age), image: String(x.image || '/assets/yone.webp'), personality: String(x.personality || ''), story: String(x.story || ''), tags: ['Original', 'História'], intro: String(x.intro || 'Um novo encontro começa.'), custom: false })); state.characters = [...standard, ...extras, ...personals.filter(c => !extras.some(e => e.id === c.id))]; for (const raw of config.characters) {
+        if (!raw?.id)
+            continue;
+        const id = String(raw.id);
+        if (raw.openingNarration) {
+            chapterOpenings[id] = { narration: String(raw.openingNarration).slice(0, 1600), dialogue: String(raw.intro || 'Quem é você?').slice(0, 800), setting: String(raw.story || 'Capítulo inicial').slice(0, 160) };
+        }
+        else if (!chapterOpenings[id]) {
+            chapterOpenings[id] = { narration: String(raw.story || 'Um novo encontro está prestes a acontecer.').slice(0, 1500), dialogue: String(raw.intro || 'Quem é você?').slice(0, 800), setting: String(raw.story || 'Primeiro encontro').slice(0, 160) };
+        }
+    } renderScreen(); }
+};
 init();

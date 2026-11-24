@@ -1,23 +1,4 @@
-LUNARIA V1 — INSTALAÇÃO RÁPIDA
-
-QUER PUBLICAR AGORA SEM CONFIGURAR NADA?
-1. Use o arquivo Lunaria_NetlifyDrop_Demonstracao.zip.
-2. Acesse https://app.netlify.com/drop
-3. Arraste o ZIP para a página e abra o endereço fornecido.
-4. Pronto: teste personagens, chat demonstrativo, modos, criador e favoritos.
-
-QUER CONVERSA DE VERDADE COM IA E GERAR NOVAS FOTOS?
-- Use Lunaria_ProjetoCompleto_IA.zip; extraia e envie TODO O PROJETO
-  para um repositório GitHub conectado ao Netlify (ou via Netlify CLI).
-- Em Environment variables no Netlify, configure:
-  OPENAI_API_KEY = SUA_CHAVE_API_OPENAI
-  APP_ACCESS_CODE = SEU_CODIGO_PRIVADO_FORTE
-- Reimplante o site. No aplicativo: Configurações > Código privado da IA.
-- Para passos completos e limitações, leia README.md no projeto completo.
-
-ATENÇÃO
-O ZIP de upload imediato NÃO inclui um modelo de IA real. Ele oferece
-respostas de demonstração e funciona sem créditos. A IA real usa API paga,
-com possíveis cobranças separadas da assinatura ChatGPT. O modo íntimo +18
-é romântico/sugestivo e não gera sexo explícito. Geração de vídeos não foi
-implementada nesta primeira versão.
+Leia COMECE_AQUI.txt para instalar a versão Lunaria 2.0.
+Para detalhes, leia README.md.
+Esta atualização usa Netlify Blobs para o Lunaria Studio e exige
+ADMIN_ACCESS_CODE diferente da senha de acesso à IA.

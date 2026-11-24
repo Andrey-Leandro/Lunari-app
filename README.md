@@ -1,84 +1,85 @@
-# Lunaria v1 — histórias que florescem
+# Lunaria 2.0 — História viva + Avatar + Lunaria Studio
 
-Primeira versão de um aplicativo PWA de personagens e histórias, com interface creme/rosa queimado e modo escuro. Projeto de demonstração para **uso privado de adultos**. O aplicativo **não é afiliado** a Naruto, League of Legends, Amor Doce, Jujutsu Kaisen, One Piece ou às demais franquias citadas; as imagens são ilustrações de fã e não materiais oficiais. Para distribuição comercial, substitua nomes e elementos protegidos por criações originais ou obtenha as licenças cabíveis.
+**Projeto para GitHub + Netlify**. Aproveita a versão anterior e sua conexão via Netlify AI Gateway. **Mantenha um backup** das conversas antes de publicar.
 
-## O que já funciona sem API
+## O que esta versão já implementa
 
-- Catálogo com 10 personagens **adultos**, filtros, busca e favoritos.
-- Conversas locais com respostas **roteirizadas de demonstração**, e personalização de história/romance/modo íntimo (+18 com autodeclaração de idade; sem sexo explícito).
-- Criação e edição de personagens originais, com personalidade, universo, idade, primeira fala e retrato.
-- Afinidade, conversas em grupo demonstrativas, modo de RPG/histórias, modo claro/escuro.
-- Gravação das conversas e perfis no navegador (localStorage), anexação de fotos e vídeos no navegador (IndexedDB).
-- Leitura da última mensagem em voz do dispositivo e ditado por voz se o navegador suportar.
-- Exportação/importação de mensagens em JSON e exportação de chats em texto (arquivos de mídia não são embutidos no backup).
-- Instalável como PWA em browsers compatíveis; arquivos estáticos disponíveis offline depois da primeira visita.
+- **Webnovela interativa como padrão:** capítulos iniciais específicos, narração e falas em blocos diferentes, continuidade da história (cenário, tempo, laços e conflitos).
+- **IA online:** conversa real através das Netlify Functions e AI Gateway, com seu `APP_ACCESS_CODE` existente. Também existe modo demonstrativo local, claramente identificado.
+- **Emoções:** afeição, interesse e intensidade que podem mudar conforme as respostas geradas pela IA, com valores salvos no aparelho. São indicadores narrativos experimentais, não estados psicológicos reais.
+- **Avatar 2D editável:** cabelo, cor do cabelo, olhos, pele, vestuário, acessórios. Perfil de nome, pronomes, características e gostos usado como contexto das conversas.
+- **Personagens dinâmicos:** 10 personagens existentes + criação de personagens no Lunaria Studio (nome, mundo, história, personalidade, foto e cena inicial). Atualizações feitas no Studio são verificadas pelo app a cada 14 segundos, sem precisar reenviar o ZIP.
+- **Gerenciar fotos:** upload de JPG/PNG/WebP no Studio, com otimização antes do envio; imagem armazenada no Netlify Blobs. Também permite HTTPS externo.
+- **Gerar imagens:** botão no perfil (versão anterior), pedido de imagem pela conversa e imagens ocasionais somente quando a pessoa optar por isso. Depende de modelo de imagens compatível e créditos da IA; não está garantido em todos os provedores.
+- **Tema claro e escuro**, estilos minimalistas, PWA instalável pelo Chrome e galeria local. **Removemos os controles e funções de áudio do app**.
+- **Separação de dados:** histórico das conversas e perfil pessoal permanecem no navegador da pessoa. O administrador não tem painel de leitura de conversas privadas.
 
-**Importante:** O modo de demonstração não é um modelo de IA treinado e **não reconhece o conteúdo das fotos/vídeos**, apenas recebe os anexos para exibição. A conversa com IA, a análise visual e a geração de retratos exigem o backend completo e uma chave de API.
+## O que ainda NÃO é a V2 final
 
-## Publicar imediatamente (demonstração)
+- Vídeos gerados por IA (ainda não implementados).
+- Sincronização de mensagens privadas / avatar entre aparelhos (cada aparelho tem seu próprio armazenamento; exporte backups).
+- Editor de avatar com milhares de peças ou arte realista 3D. A prévia atual é ilustrada em camadas SVG.
+- Verificação documental de idade, autenticação de múltiplas contas ou infraestrutura antiabuso de escala comercial.
+- Conteúdo sexual explícito. O modo íntimo é romance maduro e sensualidade sugerida entre adultos.
+- Fidelidade visual perfeita de fotos geradas em sequência, ou garantia de que o AI Gateway disponibilize a API de imagens para seu plano.
 
-Use o ZIP `Lunaria_NetlifyDrop_Demonstracao.zip`, que contém os arquivos estáticos diretamente na raiz. Arraste o arquivo para https://app.netlify.com/drop. Não configure nada: ele já abre e responde localmente em modo demonstração.
+## 1 — Atualizar a versão publicada
 
-## Publicar com IA real e geração de imagens (versão completa)
+1. No Lunaria atual, entre em **Ajustes → Exportar conversas** e salve os backups nos aparelhos de cada pessoa.
+2. Extraia o ZIP da V2 no notebook.
+3. No **GitHub Desktop**, abra o repositório **`Lunari-app`** → **Show in Explorer**.
+4. **Copie as pastas** `public`, `src`, `netlify` e os **arquivos** `netlify.toml`, `package.json`, `tsconfig.json` da pasta extraída para dentro do clone, substituindo quando solicitado. **Não copie a pasta `.git` de outro repositório nem apague o clone.**
+5. No GitHub Desktop: escreva `Lunaria 2.0 — avatar, studio e narrativa` em Summary → **Commit to main** → **Push origin**.
+6. No Netlify → **Deploys** confirme `Published`. Caso haja falha, abra os **Deploy logs**. A publicação instalará `@netlify/blobs` e compilará o TypeScript pelo comando `npm run build`.
 
-1. Extraia `Lunaria_ProjetoCompleto_IA.zip`.
-2. Envie **todo o projeto** (incluindo `netlify.toml`, `public/` e `netlify/functions/`) para um repositório no GitHub e conecte-o ao Netlify; em alternativa, use o Netlify CLI com a pasta do projeto para implantar as Functions.
-3. No Netlify, vá a **Project configuration → Environment variables** e crie:
-   - `OPENAI_API_KEY`: sua chave de API, obtida no painel da API OpenAI. **Nunca coloque a chave no HTML, JS ou GitHub.**
-   - `APP_ACCESS_CODE`: código forte, privado, exclusivo para autorizar chamadas cobradas à API (recomendação: 20+ caracteres aleatórios).
-   - Opcional `OPENAI_CHAT_MODEL` (padrão: `gpt-4.1-mini`).
-   - Opcional `OPENAI_IMAGE_MODEL` (padrão: `gpt-image-1-mini`).
-4. Reimplante o site após configurar variáveis (sem isto as Functions continuarão em modo demonstração).
-5. Abra o aplicativo publicado, vá a **Configurações → Conexão com IA**, digite `APP_ACCESS_CODE` e pressione **Conectar com código**. A interface indicará **IA conectada**.
-6. Teste uma mensagem e a função **Gerar retrato com IA** dentro do perfil.
+## 2 — Configurar Studio (uma vez)
 
-No Netlify, configure as variáveis também com escopo para Functions. A assinatura ChatGPT Plus **não inclui** uso gratuito da API; conversas e imagens podem gerar cobranças. Defina limites de gasto no provedor e evite publicar o código de acesso.
+No Netlify → projeto **lunariapp** → **Project configuration → Environment variables**:
 
-**Importante sobre Netlify Drop:** arrastar somente os arquivos estáticos do ZIP da demonstração **não implanta as Netlify Functions**. O ZIP completo requer conexão com Git ou deploy com CLI/API para ativar o backend com segurança.
+| Key | Value | Observação |
+| --- | --- | --- |
+| `APP_ACCESS_CODE` | código privado já configurado | **Não altere** se a IA já estiver funcionando |
+| `ADMIN_ACCESS_CODE` | **outro código aleatório de 20+ caracteres** | Exclusivo do painel administrativo, nunca publique no GitHub |
 
-## Estrutura
+Marque **Contains secret values** para `ADMIN_ACCESS_CODE`, escolha **All scopes** / **Functions** e reimplante após criar a variável. Mantenha `OPENAI_*` conforme estiver configurado pela sua conta do Netlify AI Gateway.
+
+Abra **`https://lunariapp.netlify.app/studio.html`**, digite apenas ali `ADMIN_ACCESS_CODE` e clique em **Entrar no Studio**. Selecione um personagem, edite e clique em **Salvar edição → Publicar mudanças**. A outra pessoa receberá atualizações em ~14 segundos (rede e cache podem atrasar).
+
+**Importante:** a senha administrativa é independente da senha de acesso à IA e não deve ser compartilhada. O Studio não fornece acesso a mensagens pessoais de outros aparelhos.
+
+## 3 — Ativar avatar pessoal
+
+No aplicativo, clique em **Meu avatar** na barra superior. Configure nome, características físicas e história pessoal, depois **Salvar avatar e identidade**. Esses dados são armazenados localmente e utilizados nas mensagens para a IA lembrar como é a protagonista.
+
+## 4 — Imagens por IA
+
+Dentro de um chat com IA conectada, escreva algo como **“Você pode me mandar uma foto sua nesta cena?”**. Após a resposta, o app solicita uma imagem ilustrativa e salva na galeria local se o serviço de imagens responder. Você também pode clicar em **Gerar retrato com IA** no perfil. Ative em Meu avatar as **fotos espontâneas** apenas se concordar com o eventual consumo de créditos. Caso não funcione, verifique o erro mostrado no app e os **Function logs** no Netlify; não prometemos disponibilidade de imagem em qualquer Gateway.
+
+## 5 — Instalar como aplicativo no Android
+
+No **Chrome para Android**, entre em `https://lunariapp.netlify.app` → ⋮ → **Instalar aplicativo** (ou **Adicionar à tela inicial**). É um **PWA**, não um APK nativo. Reabra após uma nova publicação para receber atualização; em casos de cache persistente, feche completamente e abra de novo.
+
+## Segurança e privacidade
+
+- Se o repositório estiver público, jamais inclua senhas, chaves ou arquivos `.env` no GitHub.
+- O acesso administrativo usa código secreto verificado no servidor; é **adequado para prototipagem privada, não autenticação multiusuário profissional**. Antes de abrir ao público, configure rate limiting, contas autenticadas, recuperação de senha, monitoramento de abuso e políticas de privacidade.
+- Personagens famosos são referências **de fãs**, sem licença comercial; para vender o aplicativo, obtenha licenças ou substitua por personagens originais.
+- As conversas privadas ficam **somente no navegador**, não no Netlify Blobs. Apagar dados do navegador poderá apagá-las. Use Exportar conversas.
+- O Netlify Blobs armazena **somente configurações publicadas e avatares de catálogo enviados pelo administrador**. O Studio é consultado pelo app a cada ~14s; não é websocket de tempo real.
+- A IA real e imagens exigem internet e consomem créditos do provedor; não significa uso infinito gratuito.
+
+## Arquitetura
 
 ```text
 public/
-  index.html               Interface responsiva
-  style.css                Design minimalista
-  app.js                   TypeScript compilado
-  assets/*.webp            Retratos e imagem decorativa
-  favicon.svg, icon-*.png  Identidade e ícones PWA
-  manifest.webmanifest     Instalação PWA
-  sw.js                    Cache offline dos arquivos estáticos
-src/
-  app.ts                   Fonte TypeScript
+  index.html, style.css, app.js, v2.js, v2.css
+  studio.html, studio.js, studio.css
+  assets/, manifest.webmanifest, sw.js, icon-*.png
+src/app.ts
 netlify/functions/
-  status.mjs               Detecta API e código autorizados
-  chat.mjs                 Chat com IA + análise de quadros de imagens/vídeos
-  image.mjs                Geração de retratos ilustrados
-netlify.toml               Configuração de deploy
-package.json, tsconfig.json
+  chat.mjs, status.mjs, image.mjs
+  studio.mjs, media.mjs
+netlify.toml, package.json, tsconfig.json
 ```
 
-Para editar TypeScript, instale Node.js e execute `npm install` e `npm run build`. `public/app.js` já está compilado, de modo que você não precisa compilar nada para publicar a versão incluída.
-
-## Privacidade e limitações
-
-- Conversas e mídias são salvas **no navegador atual**, não sincronizam entre dispositivos. Limpá-lo ou usar outro aparelho remove o acesso a esses dados sem backup.
-- **Fotos e vídeos:** os arquivos são guardados localmente. Com a IA conectada, imagens são redimensionadas e **até dois quadros** de vídeos são enviados junto à mensagem, para o personagem comentar. A IA **não assiste ao vídeo inteiro**, não ouve áudio de vídeo e não lê anexos antigos automaticamente.
-- **Geração de retratos:** está conectada à API de imagens, sujeita a preço, regras e disponibilidade do provedor. Manter a aparência dos personagens perfeitamente idêntica em imagens sucessivas ainda não é garantido na v1.
-- **Vídeos gerados por IA e chamadas de vídeo:** **não implementados nesta versão**. A v1 permite anexar e exibir vídeos, e envia quadros para análise com a API.
-- **Voz:** a leitura usa vozes do aparelho, não clonagem de voz de personagens. Ditado depende do navegador e permissão do microfone.
-- **+18:** o modo íntimo trabalha romance maduro e sensualidade sugerida entre adultos, **não produz conteúdo sexual explícito**. A autodeclaração de maioridade não constitui verificação documental de identidade.
-- **Sem contas:** os dados são isolados no armazenamento local, não há login nem sincronização. Não divulgue o site com API/código privados.
-- **Sem moedas:** não existe cobrança por mensagem na UI; isso não elimina custos reais da API para o responsável pelo site.
-
-## Check-list rápido
-
-- [x] HTML, CSS e TypeScript sem frameworks; boa usabilidade mobile.
-- [x] Conversas, personagens, favoritos, histórias, modo +18 sugestivo.
-- [x] Armazenamento local, exportação/importação, PWA e cache offline.
-- [x] Backend opcional para chat multimodal e geração de retratos.
-- [ ] Sincronização entre aparelhos e autenticação real.
-- [ ] Geração real de vídeo e consistência visual avançada.
-- [ ] Memória semântica avançada de longo prazo (v1 usa as mensagens recentes do chat).
-- [ ] Testes e controles de produção adicionais antes de abrir para público.
-
-Criado como protótipo técnico, não como um serviço público pronto para escala.
+A interface do Studio e do app é HTML/CSS/JavaScript. O backend do Studio usa `@netlify/blobs` para dados compartilhados. As operações de edição exigem a variável privada `ADMIN_ACCESS_CODE` e as Functions do Netlify.
