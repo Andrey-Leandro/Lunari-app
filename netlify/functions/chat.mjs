@@ -3,7 +3,8 @@ const txt=(value,max)=>typeof value==='string'?value.slice(0,max):'';
 export default async function handler(request){
  if(request.method!=='POST')return json({error:'Método não permitido.'},405);
  const apiKey=process.env.OPENAI_API_KEY, secret=process.env.APP_ACCESS_CODE;
- if(!apiKey||!secret)return json({error:'Conexão não configurada no Netlify. Adicione OPENAI_API_KEY e APP_ACCESS_CODE.'},503);
+ const root=(process.env.OPENAI_BASE_URL||'https://api.openai.com').replace(/\/+$/,'').replace(/\/v1$/,'');
+ if(!apiKey||!secret)return json({error:'IA não disponível. Ative AI Gateway (plano por créditos) e configure APP_ACCESS_CODE no Netlify.'},503);
  if(request.headers.get('x-access-code')!==secret)return json({error:'Código de acesso inválido. Abra Configurações e informe o código privado.'},401);
  const len=Number(request.headers.get('content-length')||0);if(len>2_000_000)return json({error:'Mensagem e imagens muito grandes.'},413);
  let body;try{body=await request.json();}catch{return json({error:'Envie JSON válido.'},400);}
@@ -33,7 +34,7 @@ export default async function handler(request){
  if(messages.length<2)return json({error:'Histórico vazio.'},400);
  try{
    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),24000);
-   const response=await fetch('https://api.openai.com/v1/chat/completions',{
+   const response=await fetch(`${root}/v1/chat/completions`,{
       method:'POST',headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json'},
       body:JSON.stringify({model:process.env.OPENAI_CHAT_MODEL||'gpt-4.1-mini',messages,max_completion_tokens:450,temperature:0.85,store:false}),signal:controller.signal
    });clearTimeout(timeout);

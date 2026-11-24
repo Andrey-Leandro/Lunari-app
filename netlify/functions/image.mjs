@@ -3,6 +3,7 @@ const str=(s,n)=>typeof s==='string'?s.slice(0,n):'';
 export default async function handler(request){
  if(request.method!=='POST')return json({error:'Método não permitido.'},405);
  const key=process.env.OPENAI_API_KEY,secret=process.env.APP_ACCESS_CODE;
+ const root=(process.env.OPENAI_BASE_URL||'https://api.openai.com').replace(/\/+$/,'').replace(/\/v1$/,'');
  if(!key||!secret)return json({error:'API não configurada.'},503);
  if(request.headers.get('x-access-code')!==secret)return json({error:'Código privado inválido. Abra Configurações.'},401);
  let input;try{input=await request.json();}catch{return json({error:'Dados inválidos.'},400);}
@@ -12,7 +13,7 @@ export default async function handler(request){
  const prompt=`Ilustração digital cinematográfica original, personagem fictício inequivocamente adulto de ${input.age} anos. Nome: ${name}. Aparência narrativa: ${appearance}. Personalidade que influencia expressão/gestos: ${personality}. CENA: ${scene}. Retrato artístico de alta qualidade, elegante, atraente e romântico, luz suave, detalhes sofisticados, sem marcas d'água, sem letras. Sem nudez explícita, sem atividades sexuais, sem representação de menores e sem pessoas reais.`;
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),40000);
-  const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Authorization':`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_IMAGE_MODEL||'gpt-image-1-mini',prompt,size:'1024x1024',quality:'low',n:1}),signal:controller.signal});clearTimeout(timeout);
+  const r=await fetch(`${root}/v1/images/generations`,{method:'POST',headers:{'Authorization':`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model:process.env.OPENAI_IMAGE_MODEL||'gpt-image-2',prompt,size:'1024x1024',quality:'low',n:1}),signal:controller.signal});clearTimeout(timeout);
   const data=await r.json().catch(()=>({}));if(!r.ok)return json({error:str(data.error?.message||`Erro API ${r.status}`,230)},502);
   const img=data?.data?.[0]?.b64_json;if(!img)return json({error:'A IA não retornou uma imagem.'},502);
   return json({base64:img,mime:'image/png'});
