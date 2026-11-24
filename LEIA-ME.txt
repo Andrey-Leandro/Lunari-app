@@ -1,0 +1,7 @@
+Lunaria 2.0 - Correção de instalação do Netlify
+
+1. Substitua o package.json na raiz do repositório Lunari-app.
+2. Abra o GitHub Desktop, faça Commit to main e Push origin.
+3. Verifique em Netlify > Deploys se o deploy aparece como Published.
+
+Correção: travar @netlify/blobs em 11.1.9 para evitar @netlify/otel@^7.0.9 que não existe no npm até 23/11/2026.
